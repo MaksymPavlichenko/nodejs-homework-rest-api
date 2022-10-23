@@ -5,18 +5,20 @@ const {
     removeContact,
     updateContact,
     updateContactStatus,
-} = require("../services/contactsService");
+} = require("../services/contactsServices");
 const { WrongParametersError } = require("../helpers/errors");
 
 const listContactsController = async (req, res) => {
-    const contacts = await getContact();
-    res.status(200).json({ contacts });
+    const { page = 1, limit = 20, favorite = false } = req.query;
+    const { id: owner } = req.user;
+    const contacts = await getContact(owner, { page, limit, favorite });
+    res.status(200).json({ contacts, page, limit });
 };
   
 const getContactByIdController = async (req, res) => {
-    const id = req.params.id;
-  
-    const contact = await getContactById(id);
+    const { id: owner } = req.user;
+    const contactId = req.params.id;
+    const contact = await getContactById(contactId, owner);
   
     if (!contact) {
       throw new WrongParametersError("Not found");
@@ -25,30 +27,50 @@ const getContactByIdController = async (req, res) => {
 };
   
 const addContactController = async (req, res) => {
+    const { id: owner } = req.user;
     const { name, email, phone, favorite } = req.body;
-  
-    const contact = await addContact({ name, email, phone, favorite });
+    const contact = await addContact({ name, email, phone, favorite, owner });
     res.status(201).json(contact);
 };
   
 const removeContactController = async (req, res) => {
-    await removeContact(req.params.id);
+    const contactId = req.params.id;
+    const { id: owner } = req.user;
+    const contact = await getContactById(contactId, owner);
+
+    if (!contact) {
+        throw new WrongParametersError("Not Found");
+    }
+    
+    removeContact(contactId, owner);
     res.status(200).json({ message: "contact deleted" });
 };
   
 const updateContactController = async (req, res) => {
-    const id = req.params.id;
+    const { id: owner } = req.user;
+    const contactId = req.params.id;
     const { name, email, phone } = req.body;
-  
-    const contact = await updateContact({ name, email, phone }, id);
+    const checkContact = await getContactById(contactId, owner);
+
+    if (!checkContact) {
+        throw new WrongParametersError("Not Found");
+    }
+
+    const contact = await updateContact({ name, email, phone }, contactId, owner);
     res.status(200).json(contact);
 };
   
 const updateStatusContactController = async (req, res) => {
+    const { id: owner } = req.user;
     const { favorite } = req.body;
-    const id = req.params.id;
+    const contactId = req.params.id;
+    const checkContact = await getContactById(contactId, owner);
+
+    if (!checkContact) {
+        throw new WrongParametersError("Not Found");
+    }
   
-    const contact = await updateContactStatus(id, { favorite });
+    const contact = await updateContactStatus(contactId, owner, { favorite });
     res.status(200).json(contact);
 };
   

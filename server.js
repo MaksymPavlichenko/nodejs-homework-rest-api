@@ -7,12 +7,14 @@ const app = express();
 const { connectMongo } = require("./scr/db/connection");
 const contactsRouter = require("./src/routers/contactsRouter");
 const { errorHandler } = require("./src/helpers/apiHelpers");
+const { authRouter } = require("./src/helpers/apiHelpers");
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
 app.use(logger(formatsLogger));
 app.use(morgan("tiny"));
 app.use(express.json());
 app.use("/api/contacts", contactsRouter);
+app.use("/api/users", authRouter);
 app.use(errorHandler);
 
 const start = async () => {
