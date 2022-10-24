@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const { ValidationError, WrongParametersError } = require("../../helpers/errors");
+const { ValidationError, WrongParametersError } = require("../helpers/errors");
 
 const validateObjectId = (req, res, next) => {
     const schema = Joi.string().regex(/^[0-9a-fA-F]{24}$/);
