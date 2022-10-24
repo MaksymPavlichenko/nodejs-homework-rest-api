@@ -1,7 +1,7 @@
-const { default: mongoose } = require("mongoose");
-const mangoose = require("mongoose");
+const mongoose = require("mongoose");
+const { Schema } = require("mongoose");
 
-const contactsSchema = new mangoose.Schema({
+const contactsSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "Set name"],
@@ -15,6 +15,10 @@ const contactsSchema = new mangoose.Schema({
     favorite: {
         type: Boolean,
         default: false,
+    },
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "user",
     },
 });
 
