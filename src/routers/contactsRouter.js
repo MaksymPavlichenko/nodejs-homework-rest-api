@@ -14,7 +14,7 @@ const {
     updateContactValidation,
     removeContactValidation,
     updateStatusContactValidation,
-} = require("../midlewares/validationMidleware");
+} = require("../midlewares/validationMidlewares");
 const { tokenValidation } = require("../midlewares/authMidleware");
 const { asyncWrapper } = require("../helpers/apiHelpers");
 

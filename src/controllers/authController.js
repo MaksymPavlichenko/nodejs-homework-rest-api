@@ -2,6 +2,7 @@ const {
     registration,
     login,
     changeSubscription,
+    changeAvatar,
 } = require("../services/authServices");
 
 const registrationController = async (req, res) => {
@@ -38,8 +39,15 @@ const subscriptionController = async (req, res) => {
     res.status(200).json({ subscription: subscription });
 };
 
+const changeAvatarController = async (req, res) => {
+    const id = req.user._id;
+    const avatarUrl = await changeAvatar(id, req.file);
+    res.json({ avatarUrl });
+}
+
 module.exports = {
     registrationController,
     loginController,
     subscriptionController,
+    changeAvatarController,
 }

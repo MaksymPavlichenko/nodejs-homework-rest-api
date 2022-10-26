@@ -16,6 +16,9 @@ const authSchema = new mongoose.Schema({
         enum: ["starter", "pro", "bussiness"],
         default: "starter",
     },
+    avatarUrl: {
+        type: String,
+    },
     token: {
         type: String,
         default: null,
