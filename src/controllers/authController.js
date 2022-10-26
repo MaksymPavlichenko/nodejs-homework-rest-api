@@ -3,18 +3,37 @@ const {
     login,
     changeSubscription,
     changeAvatar,
+    verification,
+    repeatVerify,
 } = require("../services/authServices");
 
 const registrationController = async (req, res) => {
     const { email, password } = req.body;
-    const user = await registration(email, password);
+    await registration(email, password);
 
-    res.status(201).json({
+    res.json({
+        message: "We have sent a link to your email address, please confirm your email by clicking on the link",
+    });
+};
+
+const verificationController = async (req, res) => {
+    const { verificationToken } = req.params;
+  
+    const user = await verification(verificationToken);
+    res.json({
+        message: "Verification successful",
         user: {
             email: user.email,
             subscription: user.subscription,
         },
     });
+};
+
+const repeatVerifyController = async (req, res) => {
+    const { email } = req.body;
+    await repeatVerify(email);
+  
+    res.json({ message: "Verification email sent" });
 };
 
 const loginController = async (req, res) => {
@@ -50,4 +69,6 @@ module.exports = {
     loginController,
     subscriptionController,
     changeAvatarController,
+    verificationController,
+    repeatVerifyController,
 }
