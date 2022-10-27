@@ -36,6 +36,18 @@ module.exports = {
         next();
     },
 
+    repeatVerifyValidation: async (req, res, next) => {
+        const schema = Joi.object({
+            email: Joi.string().email().required(),
+        });
+        const validResult = schema.validate(req.body);
+        if (validResult.error) {
+            return next(new ValidationError("missing required field email"));
+        }
+    
+        next();
+    },
+
     loginValidation: async (req, res, next) => {
         const schema = Joi.object({
             email: Joi.string().email().required(),
@@ -93,4 +105,4 @@ module.exports = {
         }
         next();
     },
-}
+};

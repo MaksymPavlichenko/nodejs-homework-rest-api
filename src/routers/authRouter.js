@@ -6,6 +6,8 @@ const {
     loginController,
     subscriptionController,
     changeAvatarController,
+    verificationController,
+    repeatVerifyController,
 } = require("../controllers/authController");
 const {
     signUpValidation,
@@ -14,10 +16,13 @@ const {
     currentUserValidation,
     subscriptionValidation,
     tokenValidation,
+    repeatVerifyValidation,
 } = require("../midlewares/authMidleware");
 const { uploadMidlewares } = require("../midlewares/uploadMidlewares")
 
 router.post("/signup", signUpValidation, asyncWrapper(registrationController));
+router.get("/verify/:verificationToken", asyncWrapper(verificationController));
+router.post("/verify", repeatVerifyValidation, asyncWrapper(repeatVerifyController));
 router.post("/login", loginValidation, asyncWrapper(loginController));
 router.get("/logout", logoutValidation);
 router.get("/current", currentUserValidation);
